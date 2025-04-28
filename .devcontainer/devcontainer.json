@@ -1,0 +1,15 @@
+{
+    "name": "Seed-to-Harvest Monorepo",
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-20",
+    "postCreateCommand": "pnpm install",
+    "forwardPorts": [3000, 8545],
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "esbenp.prettier-vscode",
+          "dbaeumer.vscode-eslint"
+        ]
+      }
+    }
+  }
+  

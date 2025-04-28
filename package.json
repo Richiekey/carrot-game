@@ -1,0 +1,15 @@
+{
+    "name": "seed-to-harvest-monorepo",
+    "private": true,
+    "workspaces": ["contracts", "web", "sync-worker"],
+    "scripts": {
+      "dev:web": "pnpm --filter web dev",
+      "dev:sync": "pnpm --filter sync-worker dev",
+      "dev:contracts": "pnpm --filter contracts test",
+      "dev": "concurrently \\\"pnpm dev:contracts\\\" \\\"pnpm dev:web\\\" \\\"pnpm dev:sync\\\""
+    },
+    "devDependencies": {
+      "concurrently": "^8.0.0"
+    }
+  }
+  

@@ -1,17 +1,26 @@
-// example: app/api/plant/route.ts
-import { supabase } from '@/lib/supabaseClient'
+// web/app/api/water/route.ts
+import { recordWater, canWaterToday } from '@/lib/wateringLogic'
 import { NextResponse } from 'next/server'
 
-export const runtime = 'edge'  // ultra-fast, serverless
+export const runtime = 'edge'
 
 export async function POST(req: Request) {
   const { userId, plotId } = await req.json()
 
-  // insert a new plot record
-  const { data, error } = await supabase
-    .from('carrot_plots')
-    .insert([{ user_id: userId, plot_id: plotId }])
+  // guard: only once per UTC day
+  const allowed = await canWaterToday(userId, plotId)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Already watered today' },
+      { status: 400 }
+    )
+  }
 
-  if (error) return NextResponse.json({ error }, { status: 400 })
-  return NextResponse.json({ data })
+  // record it
+  const result = await recordWater(userId, plotId)
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: 500 })
+  }
+
+  return NextResponse.json({ success: true })
 }
